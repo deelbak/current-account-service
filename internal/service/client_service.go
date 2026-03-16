@@ -16,3 +16,7 @@ func NewClientService(repo *repository.ClientRepository) *ClientService {
 func (s *ClientService) GetClientByIIN(iin string) (*models.Client, error) {
 	return s.repo.GetByIIN(iin)
 }
+
+func (s *ClientService) CreateClient(client *models.Client) error {
+	return s.repo.Create(client)
+}

@@ -40,6 +40,7 @@ func main() {
 
 	r := chi.NewRouter()
 	r.Get("/clients/{iin}", clientHandler.GetClient)
+	r.Post("/clients", clientHandler.CreateClient)
 
 	fmt.Println("server started on :8080")
 

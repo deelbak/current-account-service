@@ -39,3 +39,25 @@ func (r *ClientRepository) GetByIIN(iin string) (*models.Client, error) {
 
 	return &client, nil
 }
+
+func (r *ClientRepository) Create(client *models.Client) error {
+	query := `
+	INSERT INTO clients (iin, first_name, last_name, birth_date, phone)
+	VALUES ($1,$2,$3,$4,$5)
+	RETURNING id, created_at
+	`
+
+	err := r.db.QueryRow(
+		query,
+		client.IIN,
+		client.FirstName,
+		client.LastName,
+		client.BirthDate,
+		client.Phone,
+	).Scan(&client.ID, &client.CreatedAt)
+	if err != nil {
+		return err
+	}
+
+	return nil
+}
