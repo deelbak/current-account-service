@@ -42,7 +42,7 @@ func (h *ClientHandler) CreateClient(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	birthDate, err := time.Parse("YYYY-MM-DD", req.BirthDate)
+	birthDate, err := time.Parse("01-02-2006", req.BirthDate)
 	if err != nil {
 		http.Error(w, "Invalid birth date format", http.StatusBadRequest)
 		return
