@@ -9,6 +9,8 @@ import (
 	"current-account-service/internal/handler"
 	"current-account-service/internal/repository"
 	"current-account-service/internal/service"
+
+	"github.com/go-chi/chi/v5"
 )
 
 func main() {
@@ -36,9 +38,10 @@ func main() {
 	// handlers
 	clientHandler := handler.NewClientHandler(clientService)
 
-	http.HandleFunc("/clients/", clientHandler.GetClient)
+	r := chi.NewRouter()
+	r.Get("/clients/{iin}", clientHandler.GetClient)
 
 	fmt.Println("server started on :8080")
 
-	log.Fatal(http.ListenAndServe(":8080", nil))
+	log.Fatal(http.ListenAndServe(":8080", r))
 }

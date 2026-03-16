@@ -4,7 +4,8 @@ import (
 	"current-account-service/internal/service"
 	"encoding/json"
 	"net/http"
-	"strings"
+
+	"github.com/go-chi/chi/v5"
 )
 
 type ClientHandler struct {
@@ -16,7 +17,7 @@ func NewClientHandler(service *service.ClientService) *ClientHandler {
 }
 
 func (h *ClientHandler) GetClient(w http.ResponseWriter, r *http.Request) {
-	iin := strings.TrimPrefix(r.URL.Path, "/clients/")
+	iin := chi.URLParam(r, "iin")
 
 	client, err := h.service.GetClientByIIN(iin)
 	if err != nil {
