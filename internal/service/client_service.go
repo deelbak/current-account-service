@@ -1,22 +1,20 @@
 package service
 
 import (
+	"context"
+
 	"current-account-service/internal/models"
 	"current-account-service/internal/repository"
 )
 
 type ClientService struct {
-	repo *repository.ClientRepository
+	clients repository.ClientRepository
 }
 
-func NewClientService(repo *repository.ClientRepository) *ClientService {
-	return &ClientService{repo: repo}
+func NewClientService(clients repository.ClientRepository) *ClientService {
+	return &ClientService{clients: clients}
 }
 
-func (s *ClientService) GetClientByIIN(iin string) (*models.Client, error) {
-	return s.repo.GetByIIN(iin)
-}
-
-func (s *ClientService) CreateClient(client *models.Client) error {
-	return s.repo.Create(client)
+func (s *ClientService) GetByIIN(ctx context.Context, iin string) (*models.Client, error) {
+	return s.clients.GetByIIN(ctx, iin)
 }

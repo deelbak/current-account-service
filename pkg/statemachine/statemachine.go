@@ -1,9 +1,6 @@
 package statemachine
 
-import (
-	"fmt"
-	"time"
-)
+import "fmt"
 
 type State string
 type Event string
@@ -20,14 +17,13 @@ const (
 )
 
 const (
-	EventCreate      Event = "create"
-	EventUploadDooc  Event = "upload_doc"
-	EventSubmit      Event = "submit"
-	EventReview      Event = "review"
-	EventApprove     Event = "approve"
-	EventRevision    Event = "revision"
-	EventReject      Event = "reject"
-	EventOpenAccount Event = "open_account"
+	EventCreate   Event = "create"
+	EventSubmit   Event = "submit"
+	EventReview   Event = "review"
+	EventApprove  Event = "approve"
+	EventRevision Event = "revision"
+	EventReject   Event = "reject"
+	EventOpenAcct Event = "open_acct"
 )
 
 type Transition struct {
@@ -44,7 +40,7 @@ var transitions = []Transition{
 	{StateUnderReview, EventRevision, StateRevisionRequired},
 	{StateUnderReview, EventReject, StateRejected},
 	{StateRevisionRequired, EventSubmit, StateSubmitted},
-	{StateApproved, EventOpenAccount, StateAccountOpened},
+	{StateApproved, EventOpenAcct, StateAccountOpened},
 }
 
 type Machine struct {
@@ -53,7 +49,6 @@ type Machine struct {
 
 func New() *Machine {
 	m := &Machine{transitions: make(map[State]map[Event]State)}
-
 	for _, t := range transitions {
 		if m.transitions[t.From] == nil {
 			m.transitions[t.From] = make(map[Event]State)
@@ -66,23 +61,11 @@ func New() *Machine {
 func (m *Machine) Transition(current State, event Event) (State, error) {
 	events, ok := m.transitions[current]
 	if !ok {
-		return current, fmt.Errorf("invalid current state: %s", current)
+		return current, fmt.Errorf("no transitions from state %q", current)
 	}
-
 	next, ok := events[event]
 	if !ok {
-		return current, fmt.Errorf("invalid event: %s for state: %s", event, current)
+		return current, fmt.Errorf("invalid event %q in state %q", event, current)
 	}
 	return next, nil
-}
-
-type ApplicationEvent struct {
-	ApplicationID int64
-	FromState     State
-	ToState       State
-	Event         Event
-	ActorID       int64
-	ActorRole     string
-	Comment       string
-	OccuredAt     time.Time
 }
